@@ -1,0 +1,5 @@
+- Task is about cross-validation for ridge regression.
+- ridge regression is a special optimization problem -> Leastsquares with L2 penalty?
+- hyperparameters given as lambda = 0.1, 1, 10, 100, 200
+- Task: perform 10-fold cross-validation with ridge regression for each value of lambda given above and report the root mean squared error averaged over thte 10 test folds.
+- Other words: Fo each lambda, train a ridge regression 10 times leaving out a different fold each time, and report the average of the RMSE's on the left-out folds.
