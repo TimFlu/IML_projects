@@ -27,6 +27,9 @@ def fit(X, y, lam):
     """
     w = np.zeros((13,))
     # TODO: Enter your code here
+    # closed form solution for the Ridge Regression 
+    w = np.dot(np.linalg.inv(np.dot(X.T, X) + lam*np.eye(13)), np.dot(X.T, y))
+
     assert w.shape == (13,)
     return w
 
@@ -47,6 +50,9 @@ def calculate_RMSE(w, X, y):
     """
     RMSE = 0
     # TODO: Enter your code here
+    pred = np.dot(X, w)
+    RMSE = np.sqrt(np.mean((y - pred) ** 2))
+
     assert np.isscalar(RMSE)
     return RMSE
 
@@ -71,6 +77,17 @@ def average_LR_RMSE(X, y, lambdas, n_folds):
 
     # TODO: Enter your code here. Hint: Use functions 'fit' and 'calculate_RMSE' with training and test data
     # and fill all entries in the matrix 'RMSE_mat'
+    kf = KFold(n_splits=n_folds)
+    # split training data into train and test
+    for i, (train, test) in enumerate(kf.split(X)):
+        X_train, X_test = X[train], X[test]
+        y_train, y_test = y[train], y[test]
+        # fit the models for the different lambdas
+        for j, lam in enumerate(lambdas):
+            w = fit(X_train, y_train, lam)
+            err = calculate_RMSE(w=w, X=X_test, y=y_test)
+            RMSE_mat[i, j] = err
+            
 
     avg_RMSE = np.mean(RMSE_mat, axis=0)
     assert avg_RMSE.shape == (5,)
@@ -84,7 +101,7 @@ if __name__ == "__main__":
     y = data["y"].to_numpy()
     data = data.drop(columns="y")
     # print a few data samples
-    print(data.head())
+    # print(data.head())
 
     X = data.to_numpy()
     # The function calculating the average RMSE
